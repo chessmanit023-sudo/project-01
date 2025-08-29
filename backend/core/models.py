@@ -1,28 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-class User(models.Model):
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.username
-
-class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+# 繼承 Django 內建的 AbstractUser
+class User(AbstractUser):
+    pass
 
 class MembershipLevel(models.Model):
     class Level(models.IntegerChoices):
-        FREE = 0, '免費會員'
-        SILVER = 1, '銀級會員'
-        GOLD = 2, '金級會員'
-        PLATINUM = 3, '白金會員'
+        FREE = 0, 'free'
+        SILVER = 1, 'silver'
+        GOLD = 2, 'gold'
+        PLATINUM = 3, 'platinum'
     id = models.IntegerField(primary_key=True, choices=Level.choices)
     description = models.TextField()
 
     def __str__(self):
         return self.get_id_display()
+
+class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
 class Merchant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
